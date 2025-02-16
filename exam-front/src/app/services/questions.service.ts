@@ -8,7 +8,7 @@ import { firstValueFrom } from 'rxjs';
   providedIn: 'root'
 })
 export class QuestionsService {
-  url: string = 'http://localhost:3000/questions';
+  url: string = 'http://127.0.0.1:8080/questions';
 
 
   constructor(
@@ -32,7 +32,7 @@ export class QuestionsService {
     }
   }
 
-  async ajouterQuestion(question: Question): Promise<Question>{
+  async creerQuestion(question: Question): Promise<Question>{
     try{
       let reponse = await firstValueFrom(
         this.http.post<Question>(`${this.url}/add`, question, {headers: this.authService.headers})

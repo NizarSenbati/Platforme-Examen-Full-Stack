@@ -10,7 +10,7 @@ import { Exams } from '../models/exams';
   providedIn: 'root'
 })
 export class ModulesService {
-  url: String = 'http://localhost:3000/api/modules';
+  url: string = 'http://127.0.0.1:8080//api/modules';
 
 
 
@@ -47,6 +47,43 @@ export class ModulesService {
     }
   }
 
+  async creerModule(module: Modules): Promise<Modules> {
+    return firstValueFrom(
+      this.http.post<Modules>(this.url, module, { headers: this.userService.headers })
+    ).then(module => {
+      if (module) {
+        return module;
+      } else {
+        throw new Error("Erreur lors de la création du module");
+      }
+    }).catch(error => {
+      throw error;
+    });
+  }
+
+  async modifierModule(module: Modules): Promise<Modules> {
+    return firstValueFrom(
+      this.http.put<Modules>(`${this.url}/${module.id}`, module, { headers: this.userService.headers })
+    ).then(module => {
+      if (module) {
+        return module;
+      } else {
+        throw new Error("Erreur lors de la modification du module");
+      }
+    }).catch(error => {
+      throw error;
+    });
+  }
+
+  async supprimerModule(id: number): Promise<boolean> {
+    return firstValueFrom(
+      this.http.delete<boolean>(`${this.url}/${id}`, { headers: this.userService.headers })
+    ).then(result => {
+      return result;
+    }).catch(error => {
+      throw error;
+    });
+  }
   
   empty(): Modules{
     let module: Modules = {

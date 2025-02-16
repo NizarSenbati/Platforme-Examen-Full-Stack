@@ -9,7 +9,7 @@ import { Component } from '@angular/core';
       top-bar works!
     </p>
   `,
-  styleUrl: './top-bar.component.sass'
+  styleUrl: './top-bar.component.scss'
 })
 export class TopBarComponent {
 

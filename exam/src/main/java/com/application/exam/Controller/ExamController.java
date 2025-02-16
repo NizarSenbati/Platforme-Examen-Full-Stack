@@ -1,6 +1,7 @@
 package com.application.exam.Controller;
 
 import com.application.exam.Model.Exam;
+import com.application.exam.Model.Note;
 import com.application.exam.Model.Question;
 import com.application.exam.Service.ExamService;
 import com.application.exam.Service.QuestionService;
@@ -13,6 +14,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -98,6 +100,19 @@ public class ExamController {
             exam.addQuestions(questions);
             exam = examService.saveExam(exam);
             return new ResponseEntity<>(exam, HttpStatus.OK);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/{exam_id}/notes")
+    public ResponseEntity<HashMap<String, Float>> getNotes(@PathVariable("exam_id") int exam_id) {
+        try {
+            Exam exam = this.examService.getById((exam_id));
+            List<Note> notes = exam.getNotes();
+            HashMap<String, Float> notesMap = new HashMap<>();
+            notes.forEach(note -> notesMap.put((note.getEtudiant().getFirstName() + ' ' + note.getEtudiant().getLastName()), note.getNote()));
+            return new ResponseEntity<>(notesMap, HttpStatus.OK);
         } catch (RuntimeException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

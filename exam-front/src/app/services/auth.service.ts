@@ -56,11 +56,13 @@ export class AuthService {
   async logIn(login: AuthenticationRequest): Promise<AuthenticationResponse> {
       try{
         return new Promise((resolve)=>{
+          console.log("login: ", login);
           this.http.post<AuthenticationResponse>(`${this.url}/auth/authentication`, login).subscribe( token =>{
             if(token){
               localStorage.setItem("token", token.token);
-              this.userService.loadUser();
               this.loadHeaders();
+              this.userService.headers = this.headers;
+              this.userService.loadUser();
               resolve(token);
             }
             else
@@ -82,9 +84,9 @@ export class AuthService {
   }
 
   checkSatut() {
-    const createdUser = localStorage.getItem('token');
-    if (createdUser) {
-      this.token = JSON.parse(createdUser as string);
+    const token = localStorage.getItem('token');
+    if (token) {
+      this.token = JSON.parse(token as string);
     }
   }
 

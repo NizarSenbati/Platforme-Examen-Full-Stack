@@ -1,0 +1,20 @@
+<div class="all">
+    <div class="buble">
+        <div class="header">
+            <div class="logo">
+                hello
+            </div>
+            <div class="titre">Welcom to FinEth</div>
+        </div>
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+            <label for="email">Email: </label>
+            <input type="text" formControlName="email">
+            <label for="mdp">Mot de pass</label>
+            <input type="password" formControlName="mdp">
+            <div class="oublier">Mot de passe oublier ?</div>
+        </form>
+        <div class="validation">
+            <button type="submit" (click)="onSubmit()">Log In</button>
+        </div>
+    </div>
+    </div>

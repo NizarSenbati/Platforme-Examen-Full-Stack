@@ -7,20 +7,15 @@ import { AuthService } from './auth.service';
 @Injectable({
   providedIn: 'root'
 })
-export class UserService implements OnInit{
+export class UserService {
   url: string = 'http://127.0.0.1:8080/api';
   user: User = this.empty();
   token: string = '';
   headers!: HttpHeaders;
 
   constructor(
-    private http: HttpClient,
-    private authService: AuthService
+    private http: HttpClient
   ) { }
-
-  ngOnInit(): void {
-    this.headers = this.authService.headers;
-  }
 
   loadUser(): void{
     this.http.get<User>(`${this.url}/auth/data`, {headers: this.headers})
@@ -29,7 +24,7 @@ export class UserService implements OnInit{
           this.user = user;
         }
         throw new Error("Error loading user");
-      })
+      });
   }
 
   addUser(newUser: User): Observable<User>{

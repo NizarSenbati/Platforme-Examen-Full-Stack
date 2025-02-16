@@ -9,7 +9,7 @@ import { Component } from '@angular/core';
       side-bar works!
     </p>
   `,
-  styleUrl: './side-bar.component.sass'
+  styleUrl: './side-bar.component.scss'
 })
 export class SideBarComponent {
 
