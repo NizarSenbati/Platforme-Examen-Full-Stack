@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserService } from './user.service';
 import { AuthenticationRequest } from '../models/authentication-request';
@@ -9,7 +9,7 @@ import { throwError } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService {
+export class AuthService implements OnInit{
   token: String = '';
   url: string = 'http://127.0.0.1:8080/api';
   headers!: HttpHeaders;
@@ -21,6 +21,10 @@ export class AuthService {
   ) 
   {
     this.checkSatut();
+  }
+
+  ngOnInit(){
+    this.logout();
   }
   
   loadHeaders(){

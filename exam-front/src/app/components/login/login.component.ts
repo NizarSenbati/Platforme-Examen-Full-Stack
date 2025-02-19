@@ -42,7 +42,6 @@ export class LoginComponent {
         
         if (tokenObj.token.length > 0) {
           await this.router.navigate(['/home']);
-          console.log('Login successful');
         } else {
           console.log('Login failed');
         }
