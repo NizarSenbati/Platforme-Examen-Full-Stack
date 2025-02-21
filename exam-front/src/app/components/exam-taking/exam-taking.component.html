@@ -1,0 +1,70 @@
+<!-- exam-taking.component.html -->
+<div class="exam-container">
+    <div class="exam-header">
+      <h1>{{exam.titre}}</h1>
+      <div class="timer" [ngClass]="{'warning': remainingTime < 300}">
+        Temps restant: {{formatTime(remainingTime)}}
+      </div>
+    </div>
+  
+    <div class="progress-bar">
+      <div class="progress" [style.width.%]="(getAnsweredQuestionsCount() / getTotalQuestionsCount()) * 100">
+        {{getAnsweredQuestionsCount()}}/{{getTotalQuestionsCount()}} questions répondues
+      </div>
+    </div>
+  
+    <div class="questions-container">
+      <div *ngFor="let question of exam.questions; let i = index" class="question-card">
+        <h3>Question {{i + 1}}</h3>
+        <p class="question-text">{{question.question}}</p>
+  
+        <div class="answers">
+          <div 
+            class="answer-option" 
+            [class.selected]="isAnswerSelected(question.id, 1)"
+            (click)="selectAnswer(question.id, 1)"
+          >
+            <span class="answer-number">1</span>
+            <span class="answer-text">{{question.rep1}}</span>
+          </div>
+  
+          <div 
+            class="answer-option"
+            [class.selected]="isAnswerSelected(question.id, 2)"
+            (click)="selectAnswer(question.id, 2)"
+          >
+            <span class="answer-number">2</span>
+            <span class="answer-text">{{question.rep2}}</span>
+          </div>
+  
+          <div 
+            class="answer-option"
+            [class.selected]="isAnswerSelected(question.id, 3)"
+            (click)="selectAnswer(question.id, 3)"
+          >
+            <span class="answer-number">3</span>
+            <span class="answer-text">{{question.rep3}}</span>
+          </div>
+  
+          <div 
+            class="answer-option"
+            [class.selected]="isAnswerSelected(question.id, 4)"
+            (click)="selectAnswer(question.id, 4)"
+          >
+            <span class="answer-number">4</span>
+            <span class="answer-text">{{question.rep4}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <div class="exam-footer">
+      <button 
+        class="submit-btn" 
+        (click)="submitExam()" 
+        [disabled]="examSubmitted"
+      >
+        Soumettre l'examen
+      </button>
+    </div>
+  </div>

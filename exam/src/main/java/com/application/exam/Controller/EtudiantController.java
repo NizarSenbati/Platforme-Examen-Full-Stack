@@ -80,12 +80,13 @@ public class EtudiantController {
     }
 
     @PostMapping("/{id}/modules")
-    public ResponseEntity<List<ModuleElement>> addEtudiantsModules(@PathVariable("id") int id, @RequestBody List<Integer> modulesIds){
+    public ResponseEntity<List<ModuleElement>> addModules(@PathVariable("id") int id, @RequestBody List<Integer> modulesIds){
         try{
             Etudiant etudiant = etudiantService.getById(id);
             List<ModuleElement> allModules = new ArrayList<ModuleElement>();
             modulesIds.forEach(e -> allModules.add(moduleService.getById(e)));
             etudiant.addModules(allModules);
+            etudiant = this.etudiantService.saveEtudiant(etudiant);
             return new ResponseEntity<>(etudiant.getModules(), HttpStatus.OK);
         } catch (Exception e){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

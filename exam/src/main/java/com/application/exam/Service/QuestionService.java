@@ -60,4 +60,8 @@ public class QuestionService {
     public List<Question> getBySujet(String sujet) {
         return questionRepo.findBySujet(sujet);
     }
+
+    public List<String> getSujets() {
+        return questionRepo.findDistinctSujets();
+    }
 }

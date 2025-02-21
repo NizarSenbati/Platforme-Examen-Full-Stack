@@ -1,0 +1,60 @@
+<div *ngIf="loading">
+    <p>Loading...</p>
+</div>
+
+<div class="contenut" *ngIf="!loading">
+    <div class="pagedescription">
+        <div class="text">
+            <div class="titre">{{module.nom}}</div>
+            <p>{{module.session}} -- {{module.annee}} </p>
+        </div>
+    </div>
+    <div class="actions" *ngIf="user.role === 'PROFESSEUR' || user.role === 'ADMIN'">
+        <div (click)="toExam()">Exam</div>
+        <div (click)="showPopup()">Etudiants</div>
+        <div (click)="toRessource()">Ressources</div>
+    </div>
+
+    <div class="actions" *ngIf="user.role === 'ETUDIANT'">
+        <div (click)="takeExam()">Exam</div>
+    </div>
+
+    <div class="popup-overlay" *ngIf="isVisible">
+        <div class="popup-content">
+          <h2>List of Elements</h2>
+          <button class="close-button" (click)="closePopup()">×</button>
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let element of module.etudiants">
+                <td>{{ element.firstName }}</td>
+                <td>{{ element.lastName }}</td>
+                <!-- <td>
+                  <button (click)="onAction(element)">Action</button>
+                </td> -->
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+
+    <div class="events">
+        <div class="event" *ngFor="let element of module.ressources">
+            <div class="eventtitle">
+                {{element.titre}}
+            </div>
+            <div class="description">
+                {{element.description}}
+            </div>
+            <div class="data">
+                <a [href]="element.path">View PDF</a>
+            </div>
+    </div>
+</div>

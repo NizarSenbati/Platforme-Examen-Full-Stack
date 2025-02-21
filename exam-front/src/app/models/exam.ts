@@ -4,6 +4,6 @@ export interface Exam {
     id: number;
     titre: string;
     duree: number;
-    seuil: number;
+    notes: number[];
     questions: Question[];
 }

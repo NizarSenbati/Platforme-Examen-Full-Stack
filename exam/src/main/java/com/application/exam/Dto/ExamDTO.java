@@ -16,5 +16,5 @@ public class ExamDTO {
 
     private int moduleElementId;
 
-    private Set<Integer> questionIds;  // Using Set to avoid duplicates
+    private Set<Integer> questionIds;
 }

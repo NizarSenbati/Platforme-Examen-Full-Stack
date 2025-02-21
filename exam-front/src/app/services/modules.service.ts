@@ -4,7 +4,8 @@ import { UserService } from './user.service';
 import { HttpClient } from '@angular/common/http';
 import { User } from '../models/user';
 import { firstValueFrom } from 'rxjs';
-import { Exams } from '../models/exams';
+import { Exam } from '../models/exam';
+import { Ressource } from '../models/ressource';
 
 @Injectable({
   providedIn: 'root'
@@ -36,7 +37,7 @@ export class ModulesService {
   async chargerExam(id: number): Promise<any> {
     try{
       let exam = await firstValueFrom(
-        this.http.get<Exams>(`${this.url}/${id}/exams`, { headers: this.userService.headers })
+        this.http.get<Exam>(`${this.url}/${id}/exams`, { headers: this.userService.headers })
       )
       if(exam)
         return exam;
@@ -45,6 +46,20 @@ export class ModulesService {
       console.error("error: ", e);
       throw e;
     }
+  }
+
+  async chargerRessources(id: number): Promise<Ressource[]> {
+    return firstValueFrom(
+      this.http.get<Ressource[]>(`${this.url}/${id}/ressources`, { headers: this.userService.headers })
+    ).then(ressources => {
+      if (ressources) {
+        return ressources;
+      } else {
+        throw new Error("Erreur lors du chargement des ressources");
+      }
+    }).catch(error => {
+      throw error;
+    });
   }
 
   async creerModule(module: Modules): Promise<Modules> {
@@ -93,7 +108,8 @@ export class ModulesService {
       session: 'vide',
       professeur: null,
       etudiants: [],
-      exam: null
+      exam: null,
+      ressources: []
     }
     return module;
   }

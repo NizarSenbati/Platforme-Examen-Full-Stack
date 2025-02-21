@@ -1,4 +1,5 @@
-import { Exams } from "./exams";
+import { Exam } from "./exam";
+import { Ressource } from "./ressource";
 import { User } from "./user";
 
 export interface Modules {
@@ -8,5 +9,6 @@ export interface Modules {
     session: string,
     professeur: User | null,
     etudiants: User[]
-    exam: Exams | null
+    exam: Exam | null,
+    ressources: Ressource[]
 }

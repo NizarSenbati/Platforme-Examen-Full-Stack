@@ -18,13 +18,6 @@ export class ExamService {
     private questionService: QuestionsService
   ) { }
 
-// export interface Exam {
-//     titre: string;
-//     duree: number;
-//     seuil: number;
-//     questions: Question[];
-// }
-
   async generateExam(exam: Exam, difficulte: string, sujet: string, nbrQuestion: number): Promise<Exam> {
     let questions: Question[] = await this.questionService.getQuestionBySujet(sujet);
     if(questions.length < nbrQuestion){
@@ -70,6 +63,16 @@ export class ExamService {
       console.error(error);
       return [];
     }
+  }
+
+  empty(): Exam{
+    return {
+      id: 0,
+      titre: '',
+      duree: 0,
+      notes: [],
+      questions: []
+    };
   }
 
 }

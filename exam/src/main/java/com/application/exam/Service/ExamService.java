@@ -75,6 +75,7 @@ public class ExamService {
             module.setExam(exam);
             exam.setModule(module);
             exam = this.examRepository.save(exam);
+            moduleRepository.save(module);
             return exam;
         }else {
             throw new RuntimeException("Exam or Module not found");

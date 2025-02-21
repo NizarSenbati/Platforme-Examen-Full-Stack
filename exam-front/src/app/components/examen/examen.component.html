@@ -1,0 +1,100 @@
+<!-- exam-creation.component.html -->
+<div class="exam-creation">
+    <h1>Créer un Examen</h1>
+  
+    <!-- Exam Details -->
+    <div class="card exam-details">
+      <h2>Détails de l'examen</h2>
+      <div class="form-group">
+        <label for="titre">Titre de l'examen</label>
+        <input 
+          id="titre"
+          type="text" 
+          [(ngModel)]="exam.titre" 
+          placeholder="Entrez le titre de l'examen"
+        >
+      </div>
+      <div class="form-group">
+        <label for="duree">Durée (minutes)</label>
+        <input 
+          id="duree"
+          type="number" 
+          [(ngModel)]="exam.duree"
+        >
+      </div>
+    </div>
+  
+    <!-- Question Selection -->
+    <div class="card question-selection">
+      <h2>Ajouter des Questions</h2>
+      
+      <div class="filters">
+        <button (click)="toggleNewQuestionForm()" class="btn-primary">
+          <i class="fas fa-plus"></i> Nouvelle Question
+        </button>
+        
+        <select [(ngModel)]="selectedSubject" (change)="filterQuestions()">
+          <option value="">Sélectionner un sujet</option>
+          <option *ngFor="let subject of subjects" [value]="subject">
+            {{subject}}
+          </option>
+        </select>
+  
+        <select [(ngModel)]="selectedDifficulty" (change)="filterQuestions()">
+          <option value="">Toutes difficultés</option>
+          <option *ngFor="let difficulty of difficulties" [value]="difficulty">
+            {{difficulty}}
+          </option>
+        </select>
+      </div>
+  
+      <!-- Questions List -->
+      <div class="questions-list">
+        <div *ngFor="let question of filteredQuestions" class="question-card">
+          <div class="question-header">
+            <div class="question-text">{{question.question}}</div>
+            <button 
+                (click)="addQuestion(question)"
+                [disabled]="isQuestionAdded(question.id)"
+                class="btn-add"
+                >
+                <i class="fas fa-plus"></i>
+            </button>
+          </div>
+          
+          <div class="question-metadata">
+            <span class="badge subject">{{question.sujet}}</span>
+            <span class="badge difficulty">{{question.difficulte}}</span>
+          </div>
+  
+          <div class="answers-grid">
+            <div class="answer">1. {{question.rep1}}</div>
+            <div class="answer">2. {{question.rep2}}</div>
+            <div class="answer">3. {{question.rep3}}</div>
+            <div class="answer">4. {{question.rep4}}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Selected Questions -->
+    <div class="card selected-questions">
+      <h2>Questions Sélectionnées ({{exam.questions.length}})</h2>
+      <div *ngFor="let question of exam.questions" class="selected-question">
+        <span>{{question.question}}</span>
+        <button (click)="removeQuestion(question.id)" class="btn-remove">
+          Retirer
+        </button>
+      </div>
+    </div>
+  
+    <div class="actions">
+      <button 
+        (click)="createExam()"
+        [disabled]="!exam.titre || exam.questions.length === 0"
+        class="btn-primary"
+      >
+        Créer l'examen
+      </button>
+    </div>
+  </div>

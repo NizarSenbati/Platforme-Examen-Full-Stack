@@ -18,12 +18,19 @@ public class EtudiantMapper {
     ModuleService moduleService;
 
     public Etudiant toEntity(EtudiantDTO dto) {
-        List<ModuleElement> modules = new ArrayList<>();
-        dto.getModuleIds().forEach(e -> modules.add(this.moduleService.getById(e)));
-
-        List<Note> notes = new ArrayList<>();
-        dto.getNoteIds().forEach(e -> notes.add(this.noteService.getById(e).orElseThrow(() -> new RuntimeException("Note not found"))));
-
+        List<ModuleElement> modules;
+        if( !dto.getModuleIds().isEmpty() ) {
+            modules = new ArrayList<>();
+            dto.getModuleIds().forEach(e -> modules.add(this.moduleService.getById(e)));
+        } else
+            modules = null;
+        List<Note> notes;
+        if( !dto.getNoteIds().isEmpty() ) {
+            notes = new ArrayList<>();
+            dto.getNoteIds().forEach(e -> notes.add(this.noteService.getById(e).orElseThrow(() -> new RuntimeException("Note not found"))));
+        }
+        else
+            notes = null;
         return new Etudiant(dto.getCode(), dto.getEmail(), dto.getFirstName(), dto.getLastName(), modules, notes);
     }
 }

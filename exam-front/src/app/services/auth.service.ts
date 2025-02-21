@@ -19,12 +19,10 @@ export class AuthService implements OnInit{
     private userService: UserService,
     private router: Router
   ) 
-  {
-    this.checkSatut();
-  }
-
+  { }
+  
   ngOnInit(){
-    this.logout();
+    this.checkSatut();
   }
   
   loadHeaders(){
@@ -60,7 +58,6 @@ export class AuthService implements OnInit{
   async logIn(login: AuthenticationRequest): Promise<AuthenticationResponse> {
       try{
         return new Promise((resolve)=>{
-          console.log("login: ", login);
           this.http.post<AuthenticationResponse>(`${this.url}/auth/authentication`, login).subscribe( token =>{
             if(token){
               localStorage.setItem("token", token.token);
@@ -90,13 +87,16 @@ export class AuthService implements OnInit{
   checkSatut() {
     const token = localStorage.getItem('token');
     if (token) {
-      this.token = JSON.parse(token as string);
+      this.token = token;
+      return true;
     }
+    return false;
   }
 
   logout() {
     this.token = '';
     localStorage.removeItem('token');
+    localStorage.removeItem('user');
     this.router.navigate(['/login']);
   }
 

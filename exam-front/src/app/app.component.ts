@@ -17,8 +17,5 @@ export class AppComponent {
   login: boolean = false; //true lorsqu'on a une session
 
   constructor(public authService: AuthService){ }
-
-  ngOnInit(){
-    this.login = false;
-  }
+  
 }

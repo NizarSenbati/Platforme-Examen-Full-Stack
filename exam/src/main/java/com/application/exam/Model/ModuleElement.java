@@ -23,6 +23,12 @@ public class ModuleElement {
 
     private String session;
 
+    private String semestre;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "module_id")  // This creates a module_id column in the Ressource table
+    private List<Ressource> ressources;
+
     @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "professeur_id")
@@ -32,7 +38,6 @@ public class ModuleElement {
     @ManyToMany(mappedBy = "modules")
     private List<Etudiant> etudiants;
 
-    @JsonBackReference
     @OneToOne(cascade = CascadeType.ALL)
     private Exam exam;
 
@@ -40,23 +45,34 @@ public class ModuleElement {
     public ModuleElement() {}
 
 
-    public ModuleElement(String nom, Professeur professeur, int annee, String session, List<Etudiant> etudiants, Exam exam) {
+    public ModuleElement(String nom, Professeur professeur, int annee, String session, String semestre, List<Etudiant> etudiants, Exam exam, List<Ressource> ressources) {
         this.nom = nom;
         this.professeur = professeur;
         this.etudiants = etudiants;
         this.annee = annee;
         this.session = session;
         this.exam = exam;
+        this.semestre = semestre;
+        this.ressources = ressources;
     }
 
     public List<Etudiant> addEtudiants(List<Etudiant> etudiants) {
         etudiants.forEach(etudiant -> {
-            if (!etudiant.getModules().contains(this)) {
-                etudiant.addModules(List.of(this));
-            }
+            if(!etudiant.getModules().isEmpty())
+                if (!etudiant.getModules().contains(this)) {
+                    etudiant.addModules(List.of(this));
+                }
         });
         this.etudiants.addAll(etudiants);
         return this.etudiants;
+    }
+
+    public List<Ressource> addRessources(List<Ressource> ressources) {
+        if(this.ressources == null)
+            this.ressources = ressources;
+        else
+            this.ressources.addAll(ressources);
+        return this.ressources;
     }
 
     @Override

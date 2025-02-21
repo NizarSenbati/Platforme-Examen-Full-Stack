@@ -1,30 +1,77 @@
 import { Injectable, OnInit } from '@angular/core';
 import { User } from '../models/user';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { catchError, Observable, throwError } from 'rxjs';
-import { AuthService } from './auth.service';
+import { catchError, firstValueFrom, Observable, throwError } from 'rxjs';
+import { Modules } from '../models/modules';
 
 @Injectable({
   providedIn: 'root'
 })
-export class UserService {
+export class UserService implements OnInit {
   url: string = 'http://127.0.0.1:8080/api';
   user: User = this.empty();
   token: string = '';
   headers!: HttpHeaders;
+  modules: Modules[] = [];
 
   constructor(
     private http: HttpClient
   ) { }
 
-  loadUser(): void{
-    this.http.get<User>(`${this.url}/auth/data`, {headers: this.headers})
-      .subscribe(user => {
-        if(user){
-          this.user = user;
-        }
-        throw new Error("Error loading user");
-      });
+  ngOnInit(){
+    this.loadUser();
+  }
+
+  async loadUser(){
+    if(localStorage.getItem("user")){
+      console.log("User loaded from local storage");
+      this.user = JSON.parse(localStorage.getItem("user") || '{}');
+    }
+    else{
+      let u = await this.getUser();
+      if(u){
+        this.user = u;
+      }
+    }
+    return this.user;
+  }
+
+  async getUser(): Promise<User> {
+    return firstValueFrom(
+      this.http.get<User>(`${this.url}/auth/data`, { headers: this.headers })
+    ).then(async user => {
+      if (user) {
+        this.user = user;
+        user.modules = await this.chargerModules();
+        this.user = user;
+        console.log("User loaded:", user);
+        localStorage.setItem("user", JSON.stringify(user));
+        return user;
+      }
+      throw new Error("Error loading user");
+    }).catch(error => {
+      console.error(error);
+      return this.empty();
+    });
+  }
+
+async chargerModules(): Promise<Modules[]> {
+    return firstValueFrom(
+      this.http.get<Modules[]>(
+        // `${this.url}/${this.user.role.toLowerCase()}s/${this.user.id}/modules`,
+        `${this.url}/professeurs/${this.user.id}/modules`,
+        { headers: this.headers }
+      )
+    ).then(modules => {
+      if (modules) {
+        console.log("Modules loaded:", modules);
+        return modules;
+      } else {
+        throw new Error("Erreur lors du chargement des modules");
+      }
+    }).catch(error => {
+      throw error;
+    });
   }
 
   addUser(newUser: User): Observable<User>{

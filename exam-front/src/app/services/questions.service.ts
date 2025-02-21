@@ -1,3 +1,4 @@
+import { UserService } from './user.service';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Question } from '../models/questions';
@@ -13,13 +14,13 @@ export class QuestionsService {
 
   constructor(
     private http: HttpClient,
-    private authService: AuthService
+    private userService: UserService
   ) { }
 
   async chargerQuestions(): Promise<Question[]>{
     try{
       let questions: Question[] = await firstValueFrom(
-        this.http.get<Question[]>(`${this.url}/questions`, {headers: this.authService.headers})
+        this.http.get<Question[]>(`${this.url}/questions`, {headers: this.userService.headers})
       );
       if(questions){
         return questions;
@@ -32,10 +33,26 @@ export class QuestionsService {
     }
   }
 
+  async chargerSujets(): Promise<string[]>{
+    try{
+      let sujets: string[] = await firstValueFrom(
+        this.http.get<string[]>(`${this.url}/sujets`, {headers: this.userService.headers})
+      );
+      if(sujets){
+        return sujets;
+      }
+      throw new Error("Erreur lors de la récupération des sujets");
+    }
+    catch(error){
+      console.error(error);
+      return [];
+    }
+  }
+
   async creerQuestion(question: Question): Promise<Question>{
     try{
       let reponse = await firstValueFrom(
-        this.http.post<Question>(`${this.url}/add`, question, {headers: this.authService.headers})
+        this.http.post<Question>(`${this.url}/add`, question, {headers: this.userService.headers})
       );
       if(reponse){
         return reponse;
@@ -51,7 +68,7 @@ export class QuestionsService {
   async modifierQuestion(question: Question): Promise<Question>{
     try{
       let reponse = await firstValueFrom(
-        this.http.put<Question>(`${this.url}/${question.id}`, question, {headers: this.authService.headers})
+        this.http.put<Question>(`${this.url}/${question.id}`, question, {headers: this.userService.headers})
       );
       if(reponse){
         return reponse;
@@ -67,7 +84,7 @@ export class QuestionsService {
   async supprimerQuestion(id: number): Promise<boolean>{
     try{
       let reponse = await firstValueFrom(
-        this.http.delete<boolean>(`${this.url}/${id}`, {headers: this.authService.headers})
+        this.http.delete<boolean>(`${this.url}/${id}`, {headers: this.userService.headers})
       );
       if(reponse){
         return reponse;
@@ -83,7 +100,7 @@ export class QuestionsService {
   async getQuestionBySujet(sujet: string): Promise<Question[]>{
     try{
       let questions: Question[] = await firstValueFrom(
-        this.http.get<Question[]>(`${this.url}/sujet/${sujet}`, {headers: this.authService.headers})
+        this.http.get<Question[]>(`${this.url}/sujet/${sujet}`, {headers: this.userService.headers})
       );
       if(questions){
         return questions;

@@ -1,5 +1,6 @@
 package com.application.exam.Model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -24,6 +25,7 @@ public class Exam {
     @OneToMany(mappedBy = "exam", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Note> notes;
 
+    @JsonBackReference
     @OneToOne(mappedBy = "exam")
     private ModuleElement module;
 

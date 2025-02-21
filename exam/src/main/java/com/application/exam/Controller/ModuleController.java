@@ -2,10 +2,7 @@ package com.application.exam.Controller;
 
 import com.application.exam.Dto.ModuleDTO;
 import com.application.exam.Mapper.ModuleMapper;
-import com.application.exam.Model.Etudiant;
-import com.application.exam.Model.Exam;
-import com.application.exam.Model.ModuleElement;
-import com.application.exam.Model.Professeur;
+import com.application.exam.Model.*;
 import com.application.exam.Service.ModuleService;
 import com.application.exam.Service.ProfesseurService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -124,6 +121,30 @@ public class ModuleController {
             ModuleElement module = moduleService.getById(id);
             List<Etudiant> allEtudiants = module.addEtudiants(etudiants);
             return new ResponseEntity<>(allEtudiants, HttpStatus.OK);
+        } catch (RuntimeException e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping("/{id}/ressources")
+    public ResponseEntity<ModuleElement> addRessources(@PathVariable("id") int id, @RequestBody List<Ressource> ressources){
+        try{
+            ModuleElement module = moduleService.getById(id);
+            List<Ressource> allRessources = module.addRessources(ressources);
+            module = moduleService.saveModule(module);
+            return new ResponseEntity<>(module, HttpStatus.OK);
+        } catch (RuntimeException e){
+            System.out.println("erreur lors de addRessources:   "+ e);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/{id}/ressources")
+    public ResponseEntity<List<Ressource>> getRessources(@PathVariable("id") int id){
+        try{
+            ModuleElement module = moduleService.getById(id);
+            List<Ressource> ressources = module.getRessources();
+            return new ResponseEntity<>(ressources, HttpStatus.OK);
         } catch (RuntimeException e){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

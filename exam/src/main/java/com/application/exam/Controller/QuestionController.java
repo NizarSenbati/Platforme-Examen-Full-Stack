@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -44,6 +45,18 @@ public class QuestionController {
         } catch (Exception e) {
             System.out.println("erreur: "+ e);
             return new ResponseEntity<>("Failed to save question.", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("/list")
+    public ResponseEntity<List<Question>> addQuestions(@RequestBody List<Question> questions){
+        try {
+            List<Question> savedQuestions = new ArrayList<>();
+            questions.forEach(question -> savedQuestions.add(questionService.saveQuestion(question)));
+            return new ResponseEntity<>(savedQuestions, HttpStatus.CREATED);
+        } catch (Exception e) {
+            System.out.println("erreur: "+ e);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -103,6 +116,19 @@ public class QuestionController {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
             return new ResponseEntity<>(questions, HttpStatus.OK);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/sujets")
+    public ResponseEntity<List<String>> getSujets() {
+        try {
+            List<String> sujets = questionService.getSujets();
+            if (sujets.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+            return new ResponseEntity<>(sujets, HttpStatus.OK);
         } catch (RuntimeException e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

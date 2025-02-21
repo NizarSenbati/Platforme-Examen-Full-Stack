@@ -25,6 +25,9 @@ public class ExamMapper {
 
         dto.getQuestionIds().forEach(e -> questions.add(this.questionService.getOne(e)));
 
-        return new Exam(dto.getTitre(), dto.getDuree(), moduleElement, questions);
+        Exam exam = new Exam(dto.getTitre(), dto.getDuree(), moduleElement, questions);
+        moduleElement.setExam(exam);
+        moduleService.saveModule(moduleElement);
+        return exam;
     }
 }
